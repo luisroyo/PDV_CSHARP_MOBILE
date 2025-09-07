@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Pos.Mobile.Maui.ViewModels"
+             x:Class="Pos.Mobile.Maui.Views.LoginPage"
+             x:DataType="vm:LoginViewModel"
+             Title="Login"
+             BackgroundColor="#F5F5F5">
+
+    <ScrollView>
+        <Grid Padding="30" RowDefinitions="*,Auto,*">
+            
+            <!-- Logo/Header -->
+            <StackLayout Grid.Row="0" 
+                         VerticalOptions="Center" 
+                         HorizontalOptions="Center"
+                         Spacing="20">
+                <Image Source="dotnet_bot.png" 
+                       HeightRequest="120" 
+                       WidthRequest="120"
+                       Aspect="AspectFit"/>
+                <Label Text="PDV Multi-Vertical" 
+                       FontSize="28" 
+                       FontAttributes="Bold" 
+                       HorizontalOptions="Center"
+                       TextColor="#2C3E50"/>
+                <Label Text="Sistema de Pedidos e Dashboards" 
+                       FontSize="16" 
+                       HorizontalOptions="Center"
+                       TextColor="#7F8C8D"/>
+            </StackLayout>
+
+            <!-- Login Form -->
+            <Frame Grid.Row="1" 
+                   BackgroundColor="White" 
+                   CornerRadius="15" 
+                   Padding="30"
+                   HasShadow="True"
+                   Margin="0,20">
+                <StackLayout Spacing="20">
+                    
+                    <!-- Username -->
+                    <StackLayout>
+                        <Label Text="Usuário" 
+                               FontSize="16" 
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+                        <Entry Text="{Binding Username}"
+                               Placeholder="Digite seu usuário"
+                               FontSize="16"
+                               BackgroundColor="#F8F9FA"
+                               TextColor="#2C3E50"/>
+                    </StackLayout>
+
+                    <!-- Password -->
+                    <StackLayout>
+                        <Label Text="Senha" 
+                               FontSize="16" 
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+                        <Entry Text="{Binding Password}"
+                               Placeholder="Digite sua senha"
+                               IsPassword="True"
+                               FontSize="16"
+                               BackgroundColor="#F8F9FA"
+                               TextColor="#2C3E50"/>
+                    </StackLayout>
+
+                    <!-- Error Message -->
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="#E74C3C"
+                           FontSize="14"
+                           IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                           HorizontalOptions="Center"/>
+
+                    <!-- Login Button -->
+                    <Button Text="Entrar"
+                            Command="{Binding LoginCommand}"
+                            BackgroundColor="#3498DB"
+                            TextColor="White"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            CornerRadius="10"
+                            HeightRequest="50"
+                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                    <!-- Loading Indicator -->
+                    <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                       IsVisible="{Binding IsLoading}"
+                                       Color="#3498DB"
+                                       HorizontalOptions="Center"/>
+
+                </StackLayout>
+            </Frame>
+
+            <!-- Footer -->
+            <StackLayout Grid.Row="2" 
+                         VerticalOptions="End" 
+                         HorizontalOptions="Center"
+                         Spacing="10">
+                <Label Text="Versão 1.0.0" 
+                       FontSize="12" 
+                       TextColor="#95A5A6"
+                       HorizontalOptions="Center"/>
+                <Label Text="Sistema Multi-Vertical - Offline Ready" 
+                       FontSize="10" 
+                       TextColor="#BDC3C7"
+                       HorizontalOptions="Center"/>
+            </StackLayout>
+
+        </Grid>
+    </ScrollView>
+
+</ContentPage>

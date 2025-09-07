@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Pos.Mobile.Maui.ViewModels"
+             x:Class="Pos.Mobile.Maui.Views.MainPage"
+             Title="PDV Mobile"
+             BackgroundColor="#F5F5F5">
+
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" 
+                 Command="{Binding RefreshCommand}">
+        <ScrollView>
+            <Grid Padding="10" RowDefinitions="Auto,Auto,Auto,*">
+                
+                <!-- Header -->
+                <Frame Grid.Row="0" 
+                       BackgroundColor="#34495E" 
+                       CornerRadius="10" 
+                       Padding="20,15"
+                       Margin="0,0,0,10">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackLayout Grid.Column="0">
+                            <Label Text="PDV Multi-Vertical" 
+                                   FontSize="20" 
+                                   FontAttributes="Bold" 
+                                   TextColor="White"/>
+                            <Label Text="{Binding BusinessProfile}" 
+                                   FontSize="14" 
+                                   TextColor="#BDC3C7"/>
+                        </StackLayout>
+                        <StackLayout Grid.Column="1" HorizontalOptions="End">
+                            <Label Text="{Binding CurrentUser}" 
+                                   FontSize="16" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#3498DB"
+                                   HorizontalOptions="End"/>
+                            <Label Text="Usuário" 
+                                   FontSize="12" 
+                                   TextColor="#BDC3C7"
+                                   HorizontalOptions="End"/>
+                        </StackLayout>
+                    </Grid>
+                </Frame>
+
+                <!-- Dashboard Cards -->
+                <Grid Grid.Row="1" ColumnDefinitions="*,*,*" Margin="0,0,0,10">
+                    
+                    <!-- Today Sales -->
+                    <Frame Grid.Column="0" 
+                           BackgroundColor="#27AE60" 
+                           CornerRadius="8" 
+                           Padding="15"
+                           Margin="0,0,5,0">
+                        <StackLayout>
+                            <Label Text="Vendas Hoje" 
+                                   FontSize="12" 
+                                   TextColor="White"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{Binding TodaySales, StringFormat=C}" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold" 
+                                   TextColor="White"
+                                   HorizontalOptions="Center"/>
+                        </StackLayout>
+                    </Frame>
+
+                    <!-- Today Orders -->
+                    <Frame Grid.Column="1" 
+                           BackgroundColor="#3498DB" 
+                           CornerRadius="8" 
+                           Padding="15"
+                           Margin="2.5,0">
+                        <StackLayout>
+                            <Label Text="Pedidos Hoje" 
+                                   FontSize="12" 
+                                   TextColor="White"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{Binding TodayOrders}" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold" 
+                                   TextColor="White"
+                                   HorizontalOptions="Center"/>
+                        </StackLayout>
+                    </Frame>
+
+                    <!-- Average Ticket -->
+                    <Frame Grid.Column="2" 
+                           BackgroundColor="#E74C3C" 
+                           CornerRadius="8" 
+                           Padding="15"
+                           Margin="5,0,0,0">
+                        <StackLayout>
+                            <Label Text="Ticket Médio" 
+                                   FontSize="12" 
+                                   TextColor="White"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="{Binding AverageTicket, StringFormat=C}" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold" 
+                                   TextColor="White"
+                                   HorizontalOptions="Center"/>
+                        </StackLayout>
+                    </Frame>
+
+                </Grid>
+
+                <!-- Search and Actions -->
+                <Grid Grid.Row="2" ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,10">
+                    <Entry Grid.Column="0" 
+                           Text="{Binding SearchText}"
+                           Placeholder="Buscar produtos..."
+                           FontSize="16"
+                           BackgroundColor="White"
+                           Margin="0,0,10,0"/>
+                    <Button Grid.Column="1" 
+                            Text="🔄" 
+                            Command="{Binding SyncCommand}"
+                            BackgroundColor="#F39C12"
+                            TextColor="White"
+                            CornerRadius="5"
+                            WidthRequest="50"
+                            Margin="0,0,5,0"/>
+                    <Button Grid.Column="2" 
+                            Text="🔍" 
+                            Command="{Binding SearchCommand}"
+                            BackgroundColor="#3498DB"
+                            TextColor="White"
+                            CornerRadius="5"
+                            WidthRequest="50"/>
+                </Grid>
+
+                <!-- Tabs -->
+                <Grid Grid.Row="3" RowDefinitions="Auto,*">
+                    
+                    <!-- Tab Headers -->
+                    <Grid RowDefinitions="Auto" ColumnDefinitions="*,*">
+                        <Label Grid.Row="0" Grid.Column="0" 
+                               Text="📦 Produtos" 
+                               FontSize="16" 
+                               FontAttributes="Bold" 
+                               TextColor="#2C3E50"
+                               HorizontalOptions="Center"
+                               Padding="10"/>
+                        <Label Grid.Row="0" Grid.Column="1" 
+                               Text="📋 Pedidos" 
+                               FontSize="16" 
+                               FontAttributes="Bold" 
+                               TextColor="#2C3E50"
+                               HorizontalOptions="Center"
+                               Padding="10"/>
+                    </Grid>
+
+                    <!-- Content -->
+                    <Grid Grid.Row="1" ColumnDefinitions="*,*">
+                        
+                        <!-- Products List -->
+                        <CollectionView Grid.Column="0" 
+                                        ItemsSource="{Binding Products}"
+                                        Margin="0,0,5,0">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame BackgroundColor="White" 
+                                           CornerRadius="8" 
+                                           Padding="15" 
+                                           Margin="0,0,0,5"
+                                           HasShadow="True">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <StackLayout Grid.Column="0">
+                                                <Label Text="{Binding Name}" 
+                                                       FontSize="14" 
+                                                       FontAttributes="Bold"
+                                                       TextColor="#2C3E50"/>
+                                                <Label Text="{Binding Sku}" 
+                                                       FontSize="12" 
+                                                       TextColor="#7F8C8D"/>
+                                                <Label Text="{Binding Price, StringFormat=C}" 
+                                                       FontSize="16" 
+                                                       FontAttributes="Bold" 
+                                                       TextColor="#E74C3C"/>
+                                            </StackLayout>
+                                            <Button Grid.Column="1" 
+                                                    Text="+" 
+                                                    BackgroundColor="#27AE60"
+                                                    TextColor="White"
+                                                    CornerRadius="15"
+                                                    WidthRequest="30"
+                                                    HeightRequest="30"
+                                                    FontSize="16"
+                                                    FontAttributes="Bold"/>
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <!-- Orders List -->
+                        <CollectionView Grid.Column="1" 
+                                        ItemsSource="{Binding Orders}"
+                                        Margin="5,0,0,0">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame BackgroundColor="White" 
+                                           CornerRadius="8" 
+                                           Padding="15" 
+                                           Margin="0,0,0,5"
+                                           HasShadow="True">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <StackLayout Grid.Column="0">
+                                                <Label Text="{Binding Number}" 
+                                                       FontSize="14" 
+                                                       FontAttributes="Bold"
+                                                       TextColor="#2C3E50"/>
+                                                <Label Text="{Binding Status}" 
+                                                       FontSize="12" 
+                                                       TextColor="#7F8C8D"/>
+                                                <Label Text="{Binding Total, StringFormat=C}" 
+                                                       FontSize="16" 
+                                                       FontAttributes="Bold" 
+                                                       TextColor="#E74C3C"/>
+                                                <Label Text="{Binding CreatedAt, StringFormat='{0:HH:mm}'}" 
+                                                       FontSize="10" 
+                                                       TextColor="#95A5A6"/>
+                                            </StackLayout>
+                                            <Button Grid.Column="1" 
+                                                    Text="👁️" 
+                                                    BackgroundColor="#3498DB"
+                                                    TextColor="White"
+                                                    CornerRadius="15"
+                                                    WidthRequest="30"
+                                                    HeightRequest="30"
+                                                    FontSize="12"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewOrderCommand}"
+                                                    CommandParameter="{Binding}"/>
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                    </Grid>
+
+                </Grid>
+
+            </Grid>
+        </ScrollView>
+    </RefreshView>
+
+    <!-- Floating Action Button -->
+    <Grid>
+        <Button Text="+" 
+                BackgroundColor="#E74C3C"
+                TextColor="White"
+                CornerRadius="30"
+                WidthRequest="60"
+                HeightRequest="60"
+                FontSize="24"
+                FontAttributes="Bold"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="0,0,20,20"
+                Command="{Binding CreateOrderCommand}"/>
+    </Grid>
+
+</ContentPage>

@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: pos_postgres
+    environment:
+      POSTGRES_DB: pos_multivertical
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/setup-database.sql:/docker-entrypoint-initdb.d/setup-database.sql
+    networks:
+      - pos_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: pos_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - pos_network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pos_api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=pos_multivertical;Username=postgres;Password=postgres;Port=5432
+      - Redis__ConnectionString=redis:6379
+    ports:
+      - "7001:80"
+      - "7002:443"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - pos_network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+
+networks:
+  pos_network:
+    driver: bridge
