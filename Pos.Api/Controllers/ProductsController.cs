@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Pos.Api.Services;
 
 namespace Pos.Api.Controllers
 {
@@ -9,11 +10,15 @@ namespace Pos.Api.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly ILogger<ProductsController> _logger;
+        private readonly ICachedProductService _cachedProductService;
+        private readonly IRedisCacheService _cacheService;
         private static readonly List<ProductDto> _products = new();
 
-        public ProductsController(ILogger<ProductsController> logger)
+        public ProductsController(ILogger<ProductsController> logger, ICachedProductService cachedProductService, IRedisCacheService cacheService)
         {
             _logger = logger;
+            _cachedProductService = cachedProductService;
+            _cacheService = cacheService;
             InitializeProducts();
         }
 
@@ -22,6 +27,21 @@ namespace Pos.Api.Controllers
         {
             try
             {
+                // Simular tenant ID (em produção viria do JWT)
+                var tenantId = 1;
+                
+                // Cache key baseada no tenant e search
+                var cacheKey = $"products:tenant:{tenantId}:search:{search ?? "all"}";
+                
+                // Tentar buscar do cache primeiro
+                var cachedProducts = await _cacheService.GetAsync<List<ProductDto>>(cacheKey);
+                if (cachedProducts != null)
+                {
+                    _logger.LogInformation("Produtos retornados do cache Redis");
+                    return Ok(cachedProducts);
+                }
+
+                // Se não estiver no cache, buscar da fonte de dados
                 await Task.Delay(100); // Simula chamada de banco
 
                 var products = _products.AsQueryable();
@@ -33,7 +53,13 @@ namespace Pos.Api.Controllers
                         p.Sku.Contains(search, StringComparison.OrdinalIgnoreCase));
                 }
 
-                return Ok(products.ToList());
+                var productList = products.ToList();
+                
+                // Armazenar no cache por 30 minutos
+                await _cacheService.SetAsync(cacheKey, productList, TimeSpan.FromMinutes(30));
+                
+                _logger.LogInformation("Produtos buscados da fonte de dados e armazenados no cache");
+                return Ok(productList);
             }
             catch (Exception ex)
             {
@@ -85,6 +111,12 @@ namespace Pos.Api.Controllers
                 };
 
                 _products.Add(product);
+
+                // Invalidar cache de produtos para este tenant
+                var tenantId = 1;
+                await _cacheService.RemovePatternAsync($"products:tenant:{tenantId}:*");
+                
+                _logger.LogInformation("Produto criado e cache invalidado");
 
                 return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
             }

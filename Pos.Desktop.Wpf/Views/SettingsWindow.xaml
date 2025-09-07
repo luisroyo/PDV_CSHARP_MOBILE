@@ -1,0 +1,299 @@
+<Window x:Class="Pos.Desktop.Wpf.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Pos.Desktop.Wpf.Converters"
+        Title="Configurações - PDV Multi-Vertical" 
+        Height="700" 
+        Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+    
+    <Window.Resources>
+        <local:StringToBoolConverter x:Key="StringToBoolConverter"/>
+        
+        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+        </Style>
+        
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        
+        <Style x:Key="InputStyle" TargetType="TextBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="BorderBrush" Value="#BDC3C7"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        
+        <Style x:Key="SectionStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="20"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#34495E" Padding="20,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Grid.Column="0" Text="Configurações do Sistema" Style="{StaticResource HeaderTextStyle}" Foreground="White"/>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="💾 Salvar" 
+                            Command="{Binding SaveCommand}"
+                            Background="#27AE60"
+                            Foreground="White"
+                            Style="{StaticResource ButtonStyle}"/>
+                    <Button Content="🔄 Restaurar" 
+                            Command="{Binding ResetCommand}"
+                            Background="#F39C12"
+                            Foreground="White"
+                            Style="{StaticResource ButtonStyle}"/>
+                    <Button Content="❌ Fechar" 
+                            Click="CloseButton_Click"
+                            Background="#E74C3C"
+                            Foreground="White"
+                            Style="{StaticResource ButtonStyle}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Column -->
+                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                    
+                    <!-- General Settings -->
+                    <Border Style="{StaticResource SectionStyle}">
+                        <StackPanel>
+                            <TextBlock Text="⚙️ Configurações Gerais" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Nome da Empresa:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding CompanyName}" Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="CNPJ:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding CompanyDocument}" Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Perfil de Negócio:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <ComboBox ItemsSource="{Binding BusinessProfiles}"
+                                          SelectedItem="{Binding SelectedBusinessProfile}"
+                                          Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Moeda:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <ComboBox ItemsSource="{Binding Currencies}"
+                                          SelectedItem="{Binding SelectedCurrency}"
+                                          Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Printer Settings -->
+                    <Border Style="{StaticResource SectionStyle}" Margin="0,10,0,0">
+                        <StackPanel>
+                            <TextBlock Text="🖨️ Configurações de Impressão" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Impressora Padrão:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <ComboBox ItemsSource="{Binding Printers}"
+                                          SelectedItem="{Binding SelectedPrinter}"
+                                          Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Tamanho do Papel:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <ComboBox ItemsSource="{Binding PaperSizes}"
+                                          SelectedItem="{Binding SelectedPaperSize}"
+                                          Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                            
+                            <CheckBox Content="Imprimir automaticamente após venda" 
+                                      IsChecked="{Binding AutoPrint}"
+                                      FontWeight="Bold" Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Database Settings -->
+                    <Border Style="{StaticResource SectionStyle}" Margin="0,10,0,0">
+                        <StackPanel>
+                            <TextBlock Text="🗄️ Configurações do Banco" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Servidor:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding DatabaseServer}" Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Banco de Dados:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding DatabaseName}" Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Usuário:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding DatabaseUser}" Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                            
+                            <Button Content="🔧 Testar Conexão" 
+                                    Command="{Binding TestConnectionCommand}"
+                                    Background="#3498DB"
+                                    Foreground="White"
+                                    Style="{StaticResource ButtonStyle}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Right Column -->
+                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                    
+                    <!-- API Settings -->
+                    <Border Style="{StaticResource SectionStyle}">
+                        <StackPanel>
+                            <TextBlock Text="🌐 Configurações da API" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="URL da API:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding ApiUrl}" Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Timeout (segundos):" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding ApiTimeout}" Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                            
+                            <CheckBox Content="Usar HTTPS" 
+                                      IsChecked="{Binding UseHttps}"
+                                      FontWeight="Bold" Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Peripheral Settings -->
+                    <Border Style="{StaticResource SectionStyle}" Margin="0,10,0,0">
+                        <StackPanel>
+                            <TextBlock Text="🔌 Configurações de Periféricos" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Leitor de Código de Barras:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <ComboBox ItemsSource="{Binding BarcodeReaders}"
+                                          SelectedItem="{Binding SelectedBarcodeReader}"
+                                          Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Balança:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <ComboBox ItemsSource="{Binding Scales}"
+                                          SelectedItem="{Binding SelectedScale}"
+                                          Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Gaveta de Dinheiro:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <ComboBox ItemsSource="{Binding CashDrawers}"
+                                          SelectedItem="{Binding SelectedCashDrawer}"
+                                          Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Security Settings -->
+                    <Border Style="{StaticResource SectionStyle}" Margin="0,10,0,0">
+                        <StackPanel>
+                            <TextBlock Text="🔒 Configurações de Segurança" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Tempo de Sessão (minutos):" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding SessionTimeout}" Style="{StaticResource InputStyle}"/>
+                            </StackPanel>
+                            
+                            <CheckBox Content="Exigir senha para operações críticas" 
+                                      IsChecked="{Binding RequirePasswordForCriticalOperations}"
+                                      FontWeight="Bold" Margin="0,10,0,0"/>
+                            
+                            <CheckBox Content="Log de auditoria ativo" 
+                                      IsChecked="{Binding AuditLogEnabled}"
+                                      FontWeight="Bold" Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Backup Settings -->
+                    <Border Style="{StaticResource SectionStyle}" Margin="0,10,0,0">
+                        <StackPanel>
+                            <TextBlock Text="💾 Configurações de Backup" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
+                            
+                            <StackPanel Margin="0,0,0,15">
+                                <TextBlock Text="Diretório de Backup:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" Text="{Binding BackupDirectory}" Style="{StaticResource InputStyle}"/>
+                                    <Button Grid.Column="1" Content="📁" 
+                                            Command="{Binding BrowseBackupDirectoryCommand}"
+                                            Background="#95A5A6"
+                                            Foreground="White"
+                                            Style="{StaticResource ButtonStyle}"
+                                            Margin="5,0,0,0"/>
+                                </Grid>
+                            </StackPanel>
+                            
+                            <CheckBox Content="Backup automático diário" 
+                                      IsChecked="{Binding AutoBackupEnabled}"
+                                      FontWeight="Bold" Margin="0,10,0,0"/>
+                            
+                            <Button Content="🔄 Executar Backup Agora" 
+                                    Command="{Binding ExecuteBackupCommand}"
+                                    Background="#9B59B6"
+                                    Foreground="White"
+                                    Style="{StaticResource ButtonStyle}"
+                                    Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Background="#34495E" Padding="10,5">
+            <TextBlock Text="{Binding StatusMessage}" 
+                       Foreground="White" 
+                       FontSize="12"
+                       HorizontalAlignment="Center"/>
+        </Border>
+    </Grid>
+</Window>

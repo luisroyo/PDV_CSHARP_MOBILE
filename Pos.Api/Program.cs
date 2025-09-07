@@ -8,6 +8,7 @@ using Pos.Api.Models;
 using Pos.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,16 @@ builder.Services.AddControllers()
 // Database Configuration
 builder.Services.AddDbContext<PosDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Redis Configuration
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
+    return ConnectionMultiplexer.Connect(connectionString);
+});
+
+builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
+builder.Services.AddScoped<ICachedProductService, CachedProductService>();
 
 // JWT Configuration
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));

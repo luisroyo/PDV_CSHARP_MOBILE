@@ -1,0 +1,138 @@
+<Window x:Class="Pos.Desktop.Wpf.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Pos.Desktop.Wpf.Converters"
+        Title="PDV Multi-Vertical - Login" 
+        Height="500" 
+        Width="400"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#F5F5F5">
+    
+    <Window.Resources>
+        <local:StringToBoolConverter x:Key="StringToBoolConverter"/>
+        <local:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+        
+        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        
+        <Style x:Key="InputStyle" TargetType="TextBox">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="BorderBrush" Value="#BDC3C7"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Logo/Header -->
+        <StackPanel Grid.Row="0" VerticalAlignment="Center" Margin="40">
+            <TextBlock Text="🛒" FontSize="60" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+            <TextBlock Text="PDV Multi-Vertical" Style="{StaticResource HeaderTextStyle}"/>
+            <TextBlock Text="Sistema de Ponto de Venda" 
+                       FontSize="14" 
+                       Foreground="#7F8C8D" 
+                       HorizontalAlignment="Center" 
+                       Margin="0,10,0,0"/>
+        </StackPanel>
+
+        <!-- Login Form -->
+        <Border Grid.Row="1" 
+                Background="White" 
+                CornerRadius="15" 
+                Padding="40,30" 
+                Margin="40,20"
+                Effect="{StaticResource DropShadowEffect}">
+            <StackPanel>
+                <!-- Username -->
+                <StackPanel Margin="0,0,0,20">
+                    <TextBlock Text="Usuário" 
+                               FontSize="14" 
+                               FontWeight="Bold" 
+                               Foreground="#2C3E50" 
+                               Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource InputStyle}"
+                             Name="UsernameBox"/>
+                </StackPanel>
+
+                <!-- Password -->
+                <StackPanel Margin="0,0,0,20">
+                    <TextBlock Text="Senha" 
+                               FontSize="14" 
+                               FontWeight="Bold" 
+                               Foreground="#2C3E50" 
+                               Margin="0,0,0,5"/>
+                    <PasswordBox Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource InputStyle}"
+                                 Name="PasswordBox"/>
+                </StackPanel>
+
+                <!-- Error Message -->
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="#E74C3C"
+                           FontSize="12"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,20"
+                           Visibility="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}, ConverterParameter=Collapsed}"/>
+
+                <!-- Login Button -->
+                <Button Content="Entrar"
+                        Command="{Binding LoginCommand}"
+                        Background="#3498DB"
+                        Foreground="White"
+                        Style="{StaticResource ButtonStyle}"
+                        Height="50"
+                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                <!-- Loading Indicator -->
+                <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Center" 
+                            Margin="0,15,0,0"
+                            Visibility="{Binding IsLoading, Converter={StaticResource StringToBoolConverter}, ConverterParameter=Visible}">
+                    <TextBlock Text="Entrando..." 
+                               Foreground="#7F8C8D" 
+                               VerticalAlignment="Center" 
+                               Margin="0,0,10,0"/>
+                    <ProgressBar IsIndeterminate="True" 
+                                 Width="100" 
+                                 Height="4" 
+                                 Foreground="#3498DB"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Footer -->
+        <StackPanel Grid.Row="2" VerticalAlignment="Bottom" Margin="40,0,40,30">
+            <TextBlock Text="Versão 1.0.0" 
+                       FontSize="12" 
+                       Foreground="#95A5A6" 
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="Sistema Multi-Vertical - Offline Ready" 
+                       FontSize="10" 
+                       Foreground="#BDC3C7" 
+                       HorizontalAlignment="Center" 
+                       Margin="0,5,0,0"/>
+        </StackPanel>
+    </Grid>
+</Window>

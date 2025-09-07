@@ -50,28 +50,87 @@
         <!-- Header -->
         <Border Grid.Row="0" Background="#34495E" Padding="20,15">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 
-                <StackPanel Grid.Column="0">
-                    <TextBlock Text="PDV Multi-Vertical" Style="{StaticResource HeaderTextStyle}" Foreground="White"/>
-                    <TextBlock Text="{Binding BusinessProfile}" FontSize="14" Foreground="#BDC3C7"/>
-                    <TextBlock Text="{Binding IsOnline, Converter={StaticResource BoolToStringConverter}}" 
-                               FontSize="12" 
-                               Foreground="{Binding IsOnline, Converter={StaticResource BoolToColorConverter}}"/>
-                </StackPanel>
+                <!-- Top Row -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="PDV Multi-Vertical" Style="{StaticResource HeaderTextStyle}" Foreground="White"/>
+                        <TextBlock Text="{Binding BusinessProfile}" FontSize="14" Foreground="#BDC3C7"/>
+                        <TextBlock Text="{Binding IsOnline, Converter={StaticResource BoolToStringConverter}}" 
+                                   FontSize="12" 
+                                   Foreground="{Binding IsOnline, Converter={StaticResource BoolToColorConverter}}"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="20,0">
+                        <TextBlock Text="Usuário: " Foreground="White" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding CurrentUser}" Foreground="#3498DB" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <TextBlock Text="Total: " Foreground="White" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBlock Text="{Binding CartTotal, StringFormat=C}" Foreground="#E74C3C" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
                 
-                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="20,0">
-                    <TextBlock Text="Usuário: " Foreground="White" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding CurrentUser}" Foreground="#3498DB" FontWeight="Bold" VerticalAlignment="Center"/>
-                </StackPanel>
-                
-                <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <TextBlock Text="Total: " Foreground="White" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding CartTotal, StringFormat=C}" Foreground="#E74C3C" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                <!-- Menu Row -->
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,15,0,0">
+                    <Button Content="📦 Produtos" 
+                            Click="ProductsButton_Click"
+                            Background="#27AE60"
+                            Foreground="White"
+                            Padding="15,8"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Margin="0,0,10,0"/>
+                    <Button Content="👥 Clientes" 
+                            Click="CustomersButton_Click"
+                            Background="#3498DB"
+                            Foreground="White"
+                            Padding="15,8"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Margin="0,0,10,0"/>
+                    <Button Content="📊 Relatórios" 
+                            Click="ReportsButton_Click"
+                            Background="#9B59B6"
+                            Foreground="White"
+                            Padding="15,8"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Margin="0,0,10,0"/>
+                    <Button Content="⚙️ Configurações" 
+                            Click="SettingsButton_Click"
+                            Background="#95A5A6"
+                            Foreground="White"
+                            Padding="15,8"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Margin="0,0,10,0"/>
+                    <Button Content="👥 Usuários" 
+                            Click="UsersButton_Click"
+                            Background="#8E44AD"
+                            Foreground="White"
+                            Padding="15,8"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Margin="0,0,10,0"/>
+                    <Button Content="💰 Fechar Caixa" 
+                            Click="CloseCashButton_Click"
+                            Background="#E74C3C"
+                            Foreground="White"
+                            Padding="15,8"
+                            FontSize="12"
+                            FontWeight="Bold"/>
                 </StackPanel>
             </Grid>
         </Border>
